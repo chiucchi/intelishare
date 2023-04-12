@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Investigationlist from "./pages/investigations/InvestigationList";
+import PageHome from "./pages/home/PageHome";
 
 function App() {
   const { Content, Sider } = Layout;
@@ -21,7 +22,7 @@ function App() {
         style={{
           overflow: "auto",
           height: "100vh",
-          width: "280px",
+          width: "20vw",
           position: "fixed",
           left: 0,
           top: 0,
@@ -80,7 +81,7 @@ function App() {
         ></Menu>
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
-        <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
+        <Content style={{ overflow: "initial" }}>
           <Contenta></Contenta>
         </Content>
       </Layout>
@@ -92,7 +93,8 @@ function Contenta() {
   return (
     <div>
       <Routes>
-        <Route path="/home" element={<div>Home</div>}></Route>
+        <Route path="/home" element={<PageHome />}></Route>
+        <Route path="/" element={<PageHome />}></Route>
         <Route
           path="/investigations"
           element={<Investigationlist/>}
