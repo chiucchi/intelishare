@@ -1,7 +1,7 @@
 import "antd/dist/reset.css";
 
 import "./App.css";
-import { Avatar, Divider, Empty, Layout, Menu, Space, Typography } from "antd";
+import { Avatar, Divider, Layout, Menu, Space, Typography } from "antd";
 import {
   UserOutlined,
   HomeOutlined,
