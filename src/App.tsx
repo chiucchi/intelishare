@@ -9,9 +9,12 @@ import {
   FileAddOutlined,
   NotificationOutlined,
 } from "@ant-design/icons";
+
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Investigationlist from "./pages/investigations/InvestigationList";
 import PageHome from "./pages/home/PageHome";
+import InvestigationsAdd from "./pages/investigations/create/InvestigationsAdd";
+import Notifications from "./pages/notifications/Notifications";
 
 function App() {
   const { Content, Sider } = Layout;
@@ -95,20 +98,17 @@ function Contenta() {
       <Routes>
         <Route path="/home" element={<PageHome />}></Route>
         <Route path="/" element={<PageHome />}></Route>
-        <Route
-          path="/investigations"
-          element={<Investigationlist/>}
-        ></Route>
+        <Route path="/investigations" element={<Investigationlist />}></Route>
         <Route
           path="/investigations-add"
-          element={<div>Adicionar investigações</div>}
+          element={<InvestigationsAdd />}
         ></Route>
         <Route
           path="/investigations/:id"
           element={<div>Investigação</div>}
         ></Route>
         {/* <Route path="*" element={<Empty />}></Route> */}
-        <Route path="/notifications" element={<div>Notificações</div>}></Route>
+        <Route path="/notifications" element={<Notifications />}></Route>
         <Route path="/profile" element={<div>Perfil</div>}></Route>
       </Routes>
     </div>
