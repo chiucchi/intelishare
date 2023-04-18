@@ -15,6 +15,7 @@ import Investigationlist from "./pages/investigations/InvestigationList";
 import PageHome from "./pages/home/PageHome";
 import InvestigationsAdd from "./pages/investigations/create/InvestigationsAdd";
 import Notifications from "./pages/notifications/Notifications";
+import Profile from "./pages/profile/Profile";
 
 function App() {
   const { Content, Sider } = Layout;
@@ -78,6 +79,11 @@ function App() {
               key: "notifications",
               icon: <NotificationOutlined />,
             },
+            {
+              label: "Meu perfil",
+              key: "profile",
+              icon: <UserOutlined />,
+            },
           ]}
           style={{ backgroundColor: "#153D50", width: "100%" }}
           theme="dark"
@@ -109,7 +115,7 @@ function Contenta() {
         ></Route>
         {/* <Route path="*" element={<Empty />}></Route> */}
         <Route path="/notifications" element={<Notifications />}></Route>
-        <Route path="/profile" element={<div>Perfil</div>}></Route>
+        <Route path="/profile" element={<Profile />}></Route>
       </Routes>
     </div>
   );

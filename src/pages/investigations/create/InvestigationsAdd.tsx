@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   Checkbox,
   Col,
   DatePicker,
@@ -13,13 +14,14 @@ import {
 import PageContainer from "../../../components/container/Container";
 import { useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined, SendOutlined } from "@ant-design/icons";
 import JSZip from "jszip";
 
 const InvestigationsAdd = () => {
   const [checked, setChecked] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [filenames, setFilenames] = useState<string[]>([]);
+  const [mainFile, setMainFile] = useState<string>();
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -40,6 +42,7 @@ const InvestigationsAdd = () => {
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    setMainFile(file?.name);
     if (!file) {
       return;
     }
@@ -90,13 +93,19 @@ const InvestigationsAdd = () => {
         </>
       )}
       <Divider />
-      <Typography.Title level={4}>Enviar arquivos</Typography.Title>
-      <input type="file" onChange={handleFileSelect} />
-      <ul>
-        {filenames.map((filename) => (
-          <li key={filename}>{filename}</li>
-        ))}
-      </ul>
+      <Space direction="vertical" size="large" style={{ display: "flex" }}>
+        <Typography.Title level={4}>Inserir arquivos</Typography.Title>
+        <input type="file" onChange={handleFileSelect} />
+        {filenames.length > 0 && (
+          <Card title={mainFile} style={{ width: "50%" }}>
+            <ul>
+              {filenames.map((filename) => {
+                return <li key={filename}>{filename}</li>;
+              })}
+            </ul>
+          </Card>
+        )}
+      </Space>
       <div
         style={{
           position: "absolute",
@@ -105,7 +114,7 @@ const InvestigationsAdd = () => {
         }}
       >
         <Button type="primary">
-          <PlusOutlined />
+          <SendOutlined />
           Enviar dados
         </Button>
       </div>
