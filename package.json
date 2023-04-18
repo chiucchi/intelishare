@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
+    "@rpldy/upload-button": "^1.4.1",
+    "@rpldy/uploady": "^1.4.1",
     "@types/styled-components": "^5.1.26",
     "antd": "^5.4.0",
+    "jszip": "^3.10.1",
+    "rc-progress": "^3.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
