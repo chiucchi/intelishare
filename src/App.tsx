@@ -12,14 +12,14 @@ import {
   ContainerOutlined,
 } from "@ant-design/icons";
 
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import Investigationlist from "./pages/investigations/InvestigationList";
 import PageHome from "./pages/home/PageHome";
 import InvestigationsAdd from "./pages/investigations/create/InvestigationsAdd";
 import Notifications from "./pages/notifications/Notifications";
 import Profile from "./pages/profile/Profile";
 
-function App() {
+function App({ children }: { children: React.ReactNode }) {
   const { Content, Sider } = Layout;
   const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ function App() {
         <Menu
           onClick={({ key }) => {
             if (key !== "logout") {
-              navigate(key);
+              navigate("/" + key);
             } else {
               // TODO: logout
               console.log("logout");
@@ -107,34 +107,9 @@ function App() {
         ></Menu>
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
-        <Content style={{ overflow: "initial" }}>
-          <Contenta></Contenta>
-        </Content>
+        <Content style={{ overflow: "initial" }}>{children}</Content>
       </Layout>
     </Layout>
-  );
-}
-
-function Contenta() {
-  return (
-    <div>
-      <Routes>
-        <Route path="/home" element={<PageHome />}></Route>
-        <Route path="/" element={<PageHome />}></Route>
-        <Route path="/investigations" element={<Investigationlist />}></Route>
-        <Route
-          path="/investigations-add"
-          element={<InvestigationsAdd />}
-        ></Route>
-        <Route
-          path="/investigations/:id"
-          element={<div>Investigação</div>}
-        ></Route>
-        {/* <Route path="*" element={<Empty />}></Route> */}
-        <Route path="/notifications" element={<Notifications />}></Route>
-        <Route path="/profile" element={<Profile />}></Route>
-      </Routes>
-    </div>
   );
 }
 
