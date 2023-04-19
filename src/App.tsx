@@ -8,18 +8,21 @@ import {
   UnorderedListOutlined,
   FileAddOutlined,
   NotificationOutlined,
+  LogoutOutlined,
+  ContainerOutlined,
 } from "@ant-design/icons";
 
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import Investigationlist from "./pages/investigations/InvestigationList";
 import PageHome from "./pages/home/PageHome";
 import InvestigationsAdd from "./pages/investigations/create/InvestigationsAdd";
 import Notifications from "./pages/notifications/Notifications";
 import Profile from "./pages/profile/Profile";
 
-function App() {
+function App({ children }: { children: React.ReactNode }) {
   const { Content, Sider } = Layout;
   const navigate = useNavigate();
+
   return (
     <Layout hasSider>
       <Sider
@@ -38,15 +41,15 @@ function App() {
         <Space
           direction="vertical"
           size="middle"
-          style={{ marginLeft: "16px" }}
+          style={{ marginLeft: "16px", cursor: "pointer" }}
+          onClick={() => {
+            navigate("profile");
+          }}
         >
           <Avatar
             size={64}
             icon={<UserOutlined />}
             style={{ backgroundColor: "#D9D9D9" }}
-            onClick={() => {
-              navigate("profile");
-            }}
           />
           <Space direction="vertical">
             <Typography.Title level={5} style={{ color: "#f0f0f0" }}>
@@ -60,7 +63,12 @@ function App() {
         <Divider />
         <Menu
           onClick={({ key }) => {
-            navigate(key);
+            if (key !== "logout") {
+              navigate("/" + key);
+            } else {
+              // TODO: logout
+              console.log("logout");
+            }
           }}
           items={[
             { label: "Home", key: "home", icon: <HomeOutlined /> },
@@ -83,6 +91,15 @@ function App() {
               label: "Meu perfil",
               key: "profile",
               icon: <UserOutlined />,
+              children: [
+                { label: "Perfil", key: "profile", icon: <UserOutlined /> },
+                {
+                  label: "Minhas investigações",
+                  key: "my-investigations",
+                  icon: <ContainerOutlined />,
+                },
+                { label: "Sair", key: "logout", icon: <LogoutOutlined /> },
+              ],
             },
           ]}
           style={{ backgroundColor: "#153D50", width: "100%" }}
@@ -90,34 +107,9 @@ function App() {
         ></Menu>
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
-        <Content style={{ overflow: "initial" }}>
-          <Contenta></Contenta>
-        </Content>
+        <Content style={{ overflow: "initial" }}>{children}</Content>
       </Layout>
     </Layout>
-  );
-}
-
-function Contenta() {
-  return (
-    <div>
-      <Routes>
-        <Route path="/home" element={<PageHome />}></Route>
-        <Route path="/" element={<PageHome />}></Route>
-        <Route path="/investigations" element={<Investigationlist />}></Route>
-        <Route
-          path="/investigations-add"
-          element={<InvestigationsAdd />}
-        ></Route>
-        <Route
-          path="/investigations/:id"
-          element={<div>Investigação</div>}
-        ></Route>
-        {/* <Route path="*" element={<Empty />}></Route> */}
-        <Route path="/notifications" element={<Notifications />}></Route>
-        <Route path="/profile" element={<Profile />}></Route>
-      </Routes>
-    </div>
   );
 }
 
