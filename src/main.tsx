@@ -7,12 +7,16 @@ import Investigationlist from "./pages/investigations/InvestigationList";
 import InvestigationsAdd from "./pages/investigations/create/InvestigationsAdd";
 import Notifications from "./pages/notifications/Notifications";
 import Profile from "./pages/profile/Profile";
+import Login from "./pages/login/Login";
+import Sign from "./pages/sign/Sign";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<>login</>} />
+        <Route path="/" element={<Sign />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/sign" element={<Sign />} />
         <Route
           path="home"
           element={
