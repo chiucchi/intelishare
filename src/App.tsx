@@ -12,12 +12,7 @@ import {
   ContainerOutlined,
 } from "@ant-design/icons";
 
-import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
-import Investigationlist from "./pages/investigations/InvestigationList";
-import PageHome from "./pages/home/PageHome";
-import InvestigationsAdd from "./pages/investigations/create/InvestigationsAdd";
-import Notifications from "./pages/notifications/Notifications";
-import Profile from "./pages/profile/Profile";
+import { useNavigate } from "react-router-dom";
 
 function App({ children }: { children: React.ReactNode }) {
   const { Content, Sider } = Layout;
@@ -48,17 +43,19 @@ function App({ children }: { children: React.ReactNode }) {
         >
           <Avatar
             size={64}
-            icon={<UserOutlined />}
+            src={
+              <img src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
+            }
             style={{ backgroundColor: "#D9D9D9" }}
           />
-          <Space direction="vertical">
+          <div style={{ display: "flex", flexDirection: "column" }}>
             <Typography.Title level={5} style={{ color: "#f0f0f0" }}>
               John Doe
             </Typography.Title>
             <Typography.Text type="secondary" style={{ color: "#f0f0f0" }}>
               john@doe.com
             </Typography.Text>
-          </Space>
+          </div>
         </Space>
         <Divider />
         <Menu
@@ -68,6 +65,7 @@ function App({ children }: { children: React.ReactNode }) {
             } else {
               // TODO: logout
               console.log("logout");
+              navigate("/login");
             }
           }}
           items={[
