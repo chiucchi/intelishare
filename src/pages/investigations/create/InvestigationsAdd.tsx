@@ -83,7 +83,7 @@ const InvestigationsAdd = () => {
   };
 
   return (
-    <PageContainer>
+    <PageContainer style={{ height: "100%" }}>
       <Typography.Title>Adicionar dados</Typography.Title>
       <Form
         form={form}

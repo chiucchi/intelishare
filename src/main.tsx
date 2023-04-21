@@ -32,7 +32,15 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               <Investigationlist />
             </App>
           }
-        ></Route>
+        />
+        <Route
+          path="my-investigations"
+          element={
+            <App>
+              <Investigationlist />
+            </App>
+          }
+        />
         <Route
           path="investigations-add"
           element={
@@ -40,7 +48,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               <InvestigationsAdd />
             </App>
           }
-        ></Route>
+        />
         {/* <Route path="*" element={<Empty />}></Route> */}
         <Route
           path="notifications"
@@ -49,7 +57,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               <Notifications />
             </App>
           }
-        ></Route>
+        />
         <Route
           path="profile"
           element={
@@ -57,7 +65,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               <Profile />
             </App>
           }
-        ></Route>
+        />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
