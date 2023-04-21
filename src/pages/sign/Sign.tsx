@@ -125,27 +125,25 @@ function Sign() {
             layout="vertical"
           >
             <Space direction="vertical">
-              <Form.Item>
-                <Upload
-                  name="avatar"
-                  listType="picture-circle"
-                  className="avatar-uploader"
-                  showUploadList={false}
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  beforeUpload={beforeUpload}
-                  onChange={handleChange}
-                >
-                  {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      alt="avatar"
-                      style={{ width: "100%", borderRadius: "50%" }}
-                    />
-                  ) : (
-                    uploadButton
-                  )}
-                </Upload>
-              </Form.Item>
+              <Upload
+                name="avatar"
+                listType="picture-circle"
+                className="avatar-uploader"
+                showUploadList={false}
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                beforeUpload={beforeUpload}
+                onChange={handleChange}
+              >
+                {imageUrl ? (
+                  <img
+                    src={imageUrl}
+                    alt="avatar"
+                    style={{ width: "100%", borderRadius: "50%" }}
+                  />
+                ) : (
+                  uploadButton
+                )}
+              </Upload>
               <Form.Item
                 label="Nome completo"
                 name="name"
@@ -166,6 +164,9 @@ function Sign() {
                 ]}
               >
                 <Input placeholder="user@mail.com" />
+              </Form.Item>
+              <Form.Item label="Telefone" name="telephone">
+                <Input placeholder="(99) 9999-9999" />
               </Form.Item>
               <Space>
                 <Form.Item
