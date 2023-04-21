@@ -9,6 +9,7 @@ import Notifications from "./pages/notifications/Notifications";
 import Profile from "./pages/profile/Profile";
 import Login from "./pages/login/Login";
 import Sign from "./pages/sign/Sign";
+import InvestigationEdit from "./pages/investigations/edit/InvestigationEdit";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -45,7 +46,15 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           path="investigations-add"
           element={
             <App>
-              <InvestigationsAdd />
+              <InvestigationEdit />
+            </App>
+          }
+        />
+        <Route
+          path="investigations/edit"
+          element={
+            <App>
+              <InvestigationEdit />
             </App>
           }
         />
