@@ -1,33 +1,34 @@
-import { Space, Table, Typography, Tag, Select } from "antd";
+import { Space, Table, Typography, Tag, Select, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 import PageContainer from "../../components/container/Container";
+import { EyeOutlined } from "@ant-design/icons";
 
 const Investigationlist = () => {
   interface DataType {
     key: string;
     name: string;
-    age: number;
-    address: string;
+    author: string;
+    uf: string;
     tags: string[];
   }
 
   const columns: ColumnsType<DataType> = [
     {
-      title: "Name",
+      title: "Nome",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
+      /* render: (text) => <a>{text}</a>, */
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Autor",
+      dataIndex: "author",
+      key: "author",
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "UF",
+      dataIndex: "uf",
+      key: "uf",
     },
     {
       title: "Tags",
@@ -54,7 +55,9 @@ const Investigationlist = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Select mode="tags" />
+          <Button type="text" onClick={() => undefined}>
+            <EyeOutlined />
+          </Button>
         </Space>
       ),
     },
@@ -63,24 +66,24 @@ const Investigationlist = () => {
   const data: DataType[] = [
     {
       key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
+      name: "Investigação 1",
+      author: "John Brown",
+      tags: ["joão pereira", "furto"],
+      uf: "SP",
     },
     {
       key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
+      name: "Investigação 2",
+      author: "Jim Green",
+      tags: ["estelionato", "pedro rocha"],
+      uf: "DF",
     },
     {
       key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
+      name: "Investigação 3",
+      author: "Joe Black",
+      tags: ["john", "importante", "procurado"],
+      uf: "MG",
     },
   ];
 
