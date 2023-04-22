@@ -8,30 +8,58 @@ import {
   Divider,
   Form,
   Input,
+  Modal,
+  Popconfirm,
   Row,
   Select,
   Space,
+  Table,
+  Tag,
   Typography,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
 import { useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
+import type { SelectProps } from "antd";
 import {
   DeleteOutlined,
+  EditOutlined,
   MinusCircleOutlined,
-  PlusCircleOutlined,
   PlusOutlined,
+  RollbackOutlined,
   SendOutlined,
 } from "@ant-design/icons";
 import JSZip from "jszip";
-const { Option } = Select;
+import type { ColumnsType } from "antd/es/table";
+import { useNavigate } from "react-router-dom";
 
-const InvestigationsAdd = () => {
+interface DataType {
+  key: string;
+  file: string;
+  extension: string;
+  tags: string[];
+}
+
+const InvestigationDetail = () => {
   const [form] = Form.useForm();
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
   const [files, setFiles] = useState<File[]>([]);
   const [filenames, setFilenames] = useState<string[]>([]);
   const [mainFile, setMainFile] = useState<string>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -41,12 +69,6 @@ const InvestigationsAdd = () => {
 
   const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
     console.log(date, dateString);
-  };
-
-  const onChangeCheck = (e: CheckboxChangeEvent) => {
-    console.log("checked = ", e.target.checked);
-    form.setFieldsValue({ involveds: "" });
-    setChecked(e.target.checked);
   };
 
   const handleAddClick = () => {};
@@ -82,9 +104,88 @@ const InvestigationsAdd = () => {
     form.setFieldsValue({ sights: [] });
   };
 
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Arquivo",
+      dataIndex: "file",
+      key: "file",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Extensão",
+      dataIndex: "extension",
+      key: "extension",
+    },
+    {
+      title: "Tags",
+      key: "tags",
+      dataIndex: "tags",
+      render: (_, { tags }) => (
+        <>
+          {tags.map((tag) => {
+            let color = tag.length > 5 ? "geekblue" : "green";
+            if (tag === "loser") {
+              color = "volcano";
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space>
+          <Button type="text" onClick={() => setIsModalOpen(true)} disabled>
+            <EditOutlined />
+          </Button>
+          <Popconfirm
+            title="Deletar o arquivo"
+            description="Você tem certeza que quer remover o arquivo?"
+            okText="Sim"
+            cancelText="Não"
+            disabled
+            onConfirm={() => {
+              console.log(record);
+              // adicionar trigger da mensagem aqui
+            }}
+            onCancel={() => undefined}
+          >
+            <Button type="text" disabled>
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const data: DataType[] = [
+    {
+      key: "1",
+      file: "Documento 1",
+      extension: "pdf",
+      tags: ["importante", "documento", "envolvido", "brasilia", "roubo"],
+    },
+  ];
+
+  const options: SelectProps["options"] = [];
+
+  for (let i = 10; i < 36; i++) {
+    options.push({
+      value: i.toString(36) + i,
+      label: i.toString(36) + i,
+    });
+  }
+
   return (
     <PageContainer style={{ height: "100%" }}>
-      <Typography.Title>Adicionar dados</Typography.Title>
+      <Typography.Title>Editar dados</Typography.Title>
       <Form
         form={form}
         name="add-investigation"
@@ -102,17 +203,21 @@ const InvestigationsAdd = () => {
                 { required: true, message: "Por favor adicione um nome" },
               ]}
             >
-              <Input showCount maxLength={40} onChange={onChange} />
+              <Input maxLength={40} onChange={() => undefined} disabled />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label="Autor" name="author">
-              <Input value="John Doe" disabled />
+              <Input
+                defaultValue="John Doe"
+                onChange={() => undefined}
+                disabled
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item
-              label="Data de início"
+              label="Data"
               name="date"
               rules={[
                 {
@@ -121,11 +226,11 @@ const InvestigationsAdd = () => {
                 },
               ]}
             >
-              <DatePicker onChange={onChangeDate} />
+              <DatePicker onChange={onChangeDate} disabled />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Checkbox checked={checked} onChange={onChangeCheck}>
+            <Checkbox checked={checked}>
               Adicionar envolvidos conhecidos na investigação
             </Checkbox>
           </Col>
@@ -155,16 +260,13 @@ const InvestigationsAdd = () => {
                             <Input />
                           </Form.Item>
                         </Col>
-                        <Col span={6} style={{ marginBottom: "24px" }}>
-                          <MinusCircleOutlined
-                            onClick={() => remove(field.name)}
-                          />
-                        </Col>
+                        <Col span={6} style={{ marginBottom: "24px" }}></Col>
                       </Row>
                     ))}
                     <Button
                       type="dashed"
                       onClick={() => add()}
+                      disabled
                       block
                       icon={<PlusOutlined />}
                     >
@@ -179,16 +281,8 @@ const InvestigationsAdd = () => {
         <Divider />
         <Space direction="vertical" size="large" style={{ display: "flex" }}>
           <Typography.Title level={4}>Inserir arquivos</Typography.Title>
-          <input type="file" onChange={handleFileSelect} />
-          {filenames.length > 0 && (
-            <Card title={mainFile} style={{ width: "50%" }}>
-              <ul>
-                {filenames.map((filename) => {
-                  return <li key={filename}>{filename}</li>;
-                })}
-              </ul>
-            </Card>
-          )}
+          <input type="file" onChange={handleFileSelect} disabled />
+          <Table dataSource={data} columns={columns} />
         </Space>
         <div
           style={{
@@ -197,9 +291,9 @@ const InvestigationsAdd = () => {
             right: "32px",
           }}
         >
-          <Button type="primary" htmlType="submit">
-            <SendOutlined />
-            Enviar dados
+          <Button type="primary" onClick={() => navigate("/investigations")}>
+            <RollbackOutlined />
+            Voltar
           </Button>
         </div>
       </Form>
@@ -207,4 +301,4 @@ const InvestigationsAdd = () => {
   );
 };
 
-export default InvestigationsAdd;
+export default InvestigationDetail;
