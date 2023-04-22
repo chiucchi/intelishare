@@ -46,7 +46,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           path="investigations-add"
           element={
             <App>
-              <InvestigationEdit />
+              <InvestigationsAdd />
             </App>
           }
         />
