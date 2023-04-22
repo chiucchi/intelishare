@@ -209,7 +209,13 @@ const InvestigationEdit = () => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Input value="John Doe" disabled />
+            <Form.Item label="Autor" name="author">
+              <Input
+                defaultValue="John Doe"
+                onChange={() => undefined}
+                disabled
+              />
+            </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item
@@ -284,7 +290,7 @@ const InvestigationEdit = () => {
           <Table dataSource={data} columns={columns} />
         </Space>
         <Modal
-          title="Basic Modal"
+          title="Editar tags"
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
@@ -297,9 +303,6 @@ const InvestigationEdit = () => {
               tokenSeparators={[","]}
               options={options}
             />
-            <Space>
-              <Tag>aaaaa</Tag>
-            </Space>
           </Space>
         </Modal>
         <div

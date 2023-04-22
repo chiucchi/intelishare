@@ -3,15 +3,18 @@ import type { ColumnsType } from "antd/es/table";
 
 import PageContainer from "../../components/container/Container";
 import { EyeOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+
+interface DataType {
+  key: string;
+  name: string;
+  author: string;
+  uf: string;
+  tags: string[];
+}
 
 const Investigationlist = () => {
-  interface DataType {
-    key: string;
-    name: string;
-    author: string;
-    uf: string;
-    tags: string[];
-  }
+  const navigate = useNavigate();
 
   const columns: ColumnsType<DataType> = [
     {
@@ -55,7 +58,13 @@ const Investigationlist = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="text" onClick={() => undefined}>
+          <Button
+            type="text"
+            onClick={() => {
+              // fazer a request pra pegar os dados baseado no id aqui, e ai sim passar pra proxima pagina
+              navigate("detail");
+            }}
+          >
             <EyeOutlined />
           </Button>
         </Space>
