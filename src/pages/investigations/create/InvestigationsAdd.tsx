@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Card,
   Checkbox,
@@ -10,20 +11,22 @@ import {
   Input,
   Row,
   Select,
-  Slider,
   Space,
   Switch,
   Typography,
+  Upload,
+  message,
+  notification,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
 import { useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
+import type { UploadProps } from "antd";
 import {
-  DeleteOutlined,
   MinusCircleOutlined,
-  PlusCircleOutlined,
   PlusOutlined,
   SendOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import JSZip from "jszip";
 import { extractUser } from "../../../helpers/getUser";
@@ -32,10 +35,9 @@ const { Option } = Select;
 const InvestigationsAdd = () => {
   const [form] = Form.useForm();
   const [checked, setChecked] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
-  const [filenames, setFilenames] = useState<string[]>([]);
-  const [mainFile, setMainFile] = useState<string>();
+  const [file, setFile] = useState<File>();
   const userData = extractUser();
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,7 +46,6 @@ const InvestigationsAdd = () => {
   };
 
   const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
     console.log(date, dateString);
   };
 
@@ -58,16 +59,32 @@ const InvestigationsAdd = () => {
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setMainFile(file?.name);
+
     if (!file) {
       return;
     }
-    const zip = new JSZip();
-    const zipFile = await zip.loadAsync(file);
-    const files = Object.keys(zipFile.files);
-    setFilenames(files);
-    /* setFiles(zipFile.files); */
-    console.log(files);
+
+    /* if (file.size > 1024) {
+      notification.open({
+        message: "O arquivo é muito grande",
+        description: "O arquivo deve ter no máximo 1MB",
+      });
+    } */
+
+    // check if file is a zip
+    console.log(file.type);
+    if (
+      file.type !== "application/zip" &&
+      file.type !== "application/x-zip-compressed"
+    ) {
+      notification.open({
+        message: "O arquivo não é um zip",
+        description:
+          "O arquivo deve possuir uma das seguintes extensões: .zip .rar .7z .tar .gz .bz2",
+      });
+    } else {
+      setFile(file);
+    }
   };
 
   const onFinish = (values: any) => {
@@ -185,14 +202,18 @@ const InvestigationsAdd = () => {
                         </Col>
                       </Row>
                     ))}
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                    >
-                      Adicionar envolvido
-                    </Button>
+                    <Row>
+                      <Col span={12}>
+                        <Button
+                          type="dashed"
+                          onClick={() => add()}
+                          block
+                          icon={<PlusOutlined />}
+                        >
+                          Adicionar envolvido
+                        </Button>
+                      </Col>
+                    </Row>
                   </>
                 );
               }}
@@ -202,16 +223,32 @@ const InvestigationsAdd = () => {
         <Divider />
         <Space direction="vertical" size="large" style={{ display: "flex" }}>
           <Typography.Title level={4}>Inserir arquivos</Typography.Title>
-          <input type="file" onChange={handleFileSelect} />
-          {filenames.length > 0 && (
-            <Card title={mainFile} style={{ width: "50%" }}>
-              <ul>
-                {filenames.map((filename) => {
-                  return <li key={filename}>{filename}</li>;
-                })}
-              </ul>
-            </Card>
-          )}
+          <Form.Item name="file">
+            <Input
+              type="file"
+              onChange={handleFileSelect}
+              bordered={false}
+              accept=".zip,application/zip,.rar,.7zip,.tar,.gz"
+            />
+          </Form.Item>
+        </Space>
+        <Divider />
+        <Space direction="vertical" size="large" style={{ display: "flex" }}>
+          <Typography.Title level={4}>Tags relevantes</Typography.Title>
+          <Row>
+            <Col span={12}>
+              <Form.Item name="tags">
+                <Select
+                  mode="tags"
+                  style={{ width: "100%" }}
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  tokenSeparators={[","]}
+                  options={[]}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
         </Space>
         <div
           style={{
