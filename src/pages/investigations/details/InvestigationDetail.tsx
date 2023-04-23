@@ -32,6 +32,7 @@ import {
 import JSZip from "jszip";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
+import { extractUser } from "../../../helpers/getUser";
 
 interface DataType {
   key: string;
@@ -48,6 +49,7 @@ const InvestigationDetail = () => {
   const [mainFile, setMainFile] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const userData = extractUser();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -185,7 +187,7 @@ const InvestigationDetail = () => {
 
   return (
     <PageContainer style={{ height: "100%" }}>
-      <Typography.Title>Editar dados</Typography.Title>
+      <Typography.Title>Visualizar dados</Typography.Title>
       <Form
         form={form}
         name="add-investigation"
@@ -209,7 +211,7 @@ const InvestigationDetail = () => {
           <Col span={12}>
             <Form.Item label="Autor" name="author">
               <Input
-                defaultValue="John Doe"
+                defaultValue={userData?.name}
                 onChange={() => undefined}
                 disabled
               />

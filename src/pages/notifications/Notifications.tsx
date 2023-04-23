@@ -1,30 +1,14 @@
-import { Button, List, Typography } from "antd";
+import { Button, Empty, List, Space, Typography } from "antd";
 import PageContainer from "../../components/container/Container";
 import { NotificationOutlined } from "@ant-design/icons";
+import { extractUser, getUser } from "../../helpers/getUser";
+import { dados } from "./notifications-mock";
 
 const Notifications = () => {
-  const data = [
-    {
-      title: "Fulano pediu acesso à sua investigação",
-      type: "request-access",
-      userId: "123456789",
-      investigationId: "123456789",
-      description: "",
-    },
-    {
-      title: "O seu acesso à investigação X foi aprovado",
-      type: "access-response",
-      userId: "123456789",
-      investigationId: "123456789",
-      description: "",
-    },
-    {
-      title:
-        "A investigação x pode conter informações relevantes à sua investigação y",
-      type: "inform",
-      description: "",
-    },
-  ];
+  const userData = extractUser();
+
+  // get notifications from userdata
+  const data = userData.notifications;
 
   const returnActions = (type: string) => {
     switch (type) {
@@ -45,19 +29,28 @@ const Notifications = () => {
   return (
     <PageContainer>
       <Typography.Title>Notificações</Typography.Title>
-      <List
-        itemLayout="horizontal"
-        dataSource={data}
-        renderItem={(item, index) => (
-          <List.Item actions={returnActions(item.type)}>
-            <List.Item.Meta
-              avatar={<NotificationOutlined />}
-              title={<a href="https://ant.design">{item.title}</a>}
-              description={item.description}
-            />
-          </List.Item>
-        )}
-      />
+      {data.length > 0 ? (
+        <List
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={(item, index) => (
+            <List.Item actions={returnActions(item.type)}>
+              <List.Item.Meta
+                avatar={<NotificationOutlined />}
+                title={<a href="https://ant.design">{item.title}</a>}
+                description={item.description}
+              />
+            </List.Item>
+          )}
+        />
+      ) : (
+        <div style={{ position: "relative", top: "30%" }}>
+          <Empty
+            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+            description="Não há notificações para serem exibidas."
+          />
+        </div>
+      )}
     </PageContainer>
   );
 };

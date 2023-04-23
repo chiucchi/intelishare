@@ -30,6 +30,7 @@ import {
 } from "@ant-design/icons";
 import JSZip from "jszip";
 import type { ColumnsType } from "antd/es/table";
+import { extractUser } from "../../../helpers/getUser";
 
 interface DataType {
   key: string;
@@ -45,6 +46,7 @@ const InvestigationEdit = () => {
   const [filenames, setFilenames] = useState<string[]>([]);
   const [mainFile, setMainFile] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userData = extractUser();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -211,7 +213,7 @@ const InvestigationEdit = () => {
           <Col span={12}>
             <Form.Item label="Autor" name="author">
               <Input
-                defaultValue="John Doe"
+                defaultValue={userData?.name}
                 onChange={() => undefined}
                 disabled
               />

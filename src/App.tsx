@@ -13,10 +13,13 @@ import {
 } from "@ant-design/icons";
 
 import { useNavigate } from "react-router-dom";
+import { extractUser } from "./helpers/getUser";
+import Cookies from "js-cookie";
 
 function App({ children }: { children: React.ReactNode }) {
   const { Content, Sider } = Layout;
   const navigate = useNavigate();
+  const userData = extractUser();
 
   return (
     <Layout hasSider>
@@ -50,10 +53,10 @@ function App({ children }: { children: React.ReactNode }) {
           />
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Typography.Title level={5} style={{ color: "#f0f0f0" }}>
-              John Doe
+              {userData?.name}
             </Typography.Title>
             <Typography.Text type="secondary" style={{ color: "#f0f0f0" }}>
-              john@doe.com
+              {userData?.email}
             </Typography.Text>
           </div>
         </Space>
@@ -63,8 +66,7 @@ function App({ children }: { children: React.ReactNode }) {
             if (key !== "logout") {
               navigate("/" + key);
             } else {
-              // TODO: logout
-              console.log("logout");
+              Cookies.remove("token");
               navigate("/login");
             }
           }}

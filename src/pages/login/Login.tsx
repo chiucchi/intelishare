@@ -1,16 +1,22 @@
 import { Button, Form, Input, Space, Typography } from "antd";
 import Image from "../../assets/vector.svg";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { api } from "../../helpers/api";
 
 function Login() {
   const navigate = useNavigate();
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-    navigate("/home");
+  const onFinish = async (values: any) => {
+    await api.post("http://localhost:3000/login", values).then((res) => {
+      Cookies.set("token", res.data.token);
+      navigate("/home");
+    });
   };
 
   const onFinishFailed = (errorInfo: any) => {
+    // notificacao da mensagem de erro
     console.log("Failed:", errorInfo);
   };
 
