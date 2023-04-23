@@ -79,7 +79,7 @@ function App({ children }: { children: React.ReactNode }) {
             },
             {
               label: "Adicionar dados",
-              key: "investigations-add",
+              key: "investigations/add",
               icon: <FileAddOutlined />,
             },
             {
