@@ -10,7 +10,9 @@ import {
   Input,
   Row,
   Select,
+  Slider,
   Space,
+  Switch,
   Typography,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
@@ -24,6 +26,7 @@ import {
   SendOutlined,
 } from "@ant-design/icons";
 import JSZip from "jszip";
+import { extractUser } from "../../../helpers/getUser";
 const { Option } = Select;
 
 const InvestigationsAdd = () => {
@@ -32,6 +35,7 @@ const InvestigationsAdd = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [filenames, setFilenames] = useState<string[]>([]);
   const [mainFile, setMainFile] = useState<string>();
+  const userData = extractUser();
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -40,6 +44,7 @@ const InvestigationsAdd = () => {
   };
 
   const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
+    console.log(date, dateString);
     console.log(date, dateString);
   };
 
@@ -82,6 +87,10 @@ const InvestigationsAdd = () => {
     form.setFieldsValue({ sights: [] });
   };
 
+  const onChangeSwitch = (checked: boolean) => {
+    console.log(`switch to ${checked}`);
+  };
+
   return (
     <PageContainer style={{ height: "100%" }}>
       <Typography.Title>Adicionar dados</Typography.Title>
@@ -93,7 +102,7 @@ const InvestigationsAdd = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 24]} align="top">
+        <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 16]} align="top">
           <Col span={12}>
             <Form.Item
               label="Nome"
@@ -107,7 +116,11 @@ const InvestigationsAdd = () => {
           </Col>
           <Col span={12}>
             <Form.Item label="Autor" name="author">
-              <Input value="John Doe" disabled />
+              <Input
+                defaultValue={userData?.name}
+                onChange={() => undefined}
+                disabled
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -124,7 +137,17 @@ const InvestigationsAdd = () => {
               <DatePicker onChange={onChangeDate} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
+            <Form.Item label="Privacidade" name="isPublic">
+              <Switch
+                defaultChecked
+                onChange={onChangeSwitch}
+                checkedChildren="Pública"
+                unCheckedChildren="Privada"
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
             <Checkbox checked={checked} onChange={onChangeCheck}>
               Adicionar envolvidos conhecidos na investigação
             </Checkbox>
