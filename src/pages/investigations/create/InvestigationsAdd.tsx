@@ -28,7 +28,6 @@ import {
   SendOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import JSZip from "jszip";
 import { extractUser } from "../../../helpers/getUser";
 const { Option } = Select;
 

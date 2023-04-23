@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   Checkbox,
   Col,
   DatePicker,
@@ -8,29 +7,26 @@ import {
   Divider,
   Form,
   Input,
-  Modal,
   Popconfirm,
   Row,
   Select,
   Space,
-  Table,
-  Tag,
+  Switch,
   Typography,
+  notification,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
 import { useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import type { SelectProps } from "antd";
 import {
-  DeleteOutlined,
-  EditOutlined,
+  CloseOutlined,
   MinusCircleOutlined,
   PlusOutlined,
   SendOutlined,
 } from "@ant-design/icons";
-import JSZip from "jszip";
-import type { ColumnsType } from "antd/es/table";
 import { extractUser } from "../../../helpers/getUser";
+import { useNavigate } from "react-router-dom";
 
 interface DataType {
   key: string;
@@ -42,23 +38,11 @@ interface DataType {
 const InvestigationEdit = () => {
   const [form] = Form.useForm();
   const [checked, setChecked] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
-  const [filenames, setFilenames] = useState<string[]>([]);
-  const [mainFile, setMainFile] = useState<string>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [file, setFile] = useState<File>();
   const userData = extractUser();
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const navigate = useNavigate();
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -80,16 +64,32 @@ const InvestigationEdit = () => {
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setMainFile(file?.name);
+
     if (!file) {
       return;
     }
-    const zip = new JSZip();
-    const zipFile = await zip.loadAsync(file);
-    const files = Object.keys(zipFile.files);
-    setFilenames(files);
-    /* setFiles(zipFile.files); */
-    console.log(files);
+
+    /* if (file.size > 1024) {
+      notification.open({
+        message: "O arquivo é muito grande",
+        description: "O arquivo deve ter no máximo 1MB",
+      });
+    } */
+
+    // check if file is a zip
+    console.log(file.type);
+    if (
+      file.type !== "application/zip" &&
+      file.type !== "application/x-zip-compressed"
+    ) {
+      notification.open({
+        message: "O arquivo não é um zip",
+        description:
+          "O arquivo deve possuir uma das seguintes extensões: .zip .rar .7z .tar .gz .bz2",
+      });
+    } else {
+      setFile(file);
+    }
   };
 
   const onFinish = (values: any) => {
@@ -100,83 +100,9 @@ const InvestigationEdit = () => {
     console.log("Failed:", errorInfo);
   };
 
-  const sights = {
-    Beijing: ["Tiananmen", "Great Wall"],
-    Shanghai: ["Oriental Pearl", "The Bund"],
-  };
-
   const handleChange = () => {
     form.setFieldsValue({ sights: [] });
   };
-
-  const columns: ColumnsType<DataType> = [
-    {
-      title: "Arquivo",
-      dataIndex: "file",
-      key: "file",
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: "Extensão",
-      dataIndex: "extension",
-      key: "extension",
-    },
-    {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <Space>
-          <Button type="text" onClick={() => setIsModalOpen(true)}>
-            <EditOutlined />
-          </Button>
-          <Popconfirm
-            title="Deletar o arquivo"
-            description="Você tem certeza que quer remover o arquivo?"
-            okText="Sim"
-            cancelText="Não"
-            onConfirm={() => {
-              console.log(record);
-              // adicionar trigger da mensagem aqui
-            }}
-            onCancel={() => undefined}
-          >
-            <Button type="text">
-              <DeleteOutlined />
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
-
-  const data: DataType[] = [
-    {
-      key: "1",
-      file: "Documento 1",
-      extension: "pdf",
-      tags: ["importante", "documento", "envolvido", "brasilia", "roubo"],
-    },
-  ];
 
   const options: SelectProps["options"] = [];
 
@@ -186,6 +112,10 @@ const InvestigationEdit = () => {
       label: i.toString(36) + i,
     });
   }
+
+  const onChangeSwitch = (checked: boolean) => {
+    console.log(`switch to ${checked}`);
+  };
 
   return (
     <PageContainer style={{ height: "100%" }}>
@@ -221,7 +151,7 @@ const InvestigationEdit = () => {
           </Col>
           <Col span={8}>
             <Form.Item
-              label="Data"
+              label="Data de início"
               name="date"
               rules={[
                 {
@@ -233,7 +163,17 @@ const InvestigationEdit = () => {
               <DatePicker onChange={onChangeDate} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
+            <Form.Item label="Privacidade" name="isPublic">
+              <Switch
+                defaultChecked
+                onChange={onChangeSwitch}
+                checkedChildren="Pública"
+                unCheckedChildren="Privada"
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
             <Checkbox checked={checked} onChange={onChangeCheck}>
               Adicionar envolvidos conhecidos na investigação
             </Checkbox>
@@ -271,14 +211,18 @@ const InvestigationEdit = () => {
                         </Col>
                       </Row>
                     ))}
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                    >
-                      Adicionar envolvido
-                    </Button>
+                    <Row>
+                      <Col span={12}>
+                        <Button
+                          type="dashed"
+                          onClick={() => add()}
+                          block
+                          icon={<PlusOutlined />}
+                        >
+                          Adicionar envolvido
+                        </Button>
+                      </Col>
+                    </Row>
                   </>
                 );
               }}
@@ -288,25 +232,34 @@ const InvestigationEdit = () => {
         <Divider />
         <Space direction="vertical" size="large" style={{ display: "flex" }}>
           <Typography.Title level={4}>Inserir arquivos</Typography.Title>
-          <input type="file" onChange={handleFileSelect} />
-          <Table dataSource={data} columns={columns} />
-        </Space>
-        <Modal
-          title="Editar tags"
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <Space direction="vertical" style={{ width: "100%" }}>
-            <Select
-              mode="tags"
-              style={{ width: "100%" }}
-              onChange={handleChange}
-              tokenSeparators={[","]}
-              options={options}
+          <Form.Item name="file">
+            <Input
+              type="file"
+              onChange={handleFileSelect}
+              bordered={false}
+              accept=".zip,application/zip,.rar,.7zip,.tar,.gz"
             />
-          </Space>
-        </Modal>
+          </Form.Item>
+          {/* MOSTRAR AQUI O LINK DO ARQUIVO QUE JÁ TEM NA INVESTIGAÇÃO */}
+        </Space>
+        <Divider />
+        <Space direction="vertical" size="large" style={{ display: "flex" }}>
+          <Typography.Title level={4}>Tags relevantes</Typography.Title>
+          <Row>
+            <Col span={12}>
+              <Form.Item name="tags">
+                <Select
+                  mode="tags"
+                  style={{ width: "100%" }}
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  tokenSeparators={[","]}
+                  options={[]}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Space>
         <div
           style={{
             position: "absolute",
@@ -314,10 +267,24 @@ const InvestigationEdit = () => {
             right: "32px",
           }}
         >
-          <Button type="primary" htmlType="submit">
-            <SendOutlined />
-            Enviar dados
-          </Button>
+          <Space>
+            <Popconfirm
+              title="Cancelar edição"
+              description="Tem certeza que quer dispensar as alterações?"
+              okText="Sim"
+              cancelText="Não"
+              onConfirm={() => navigate(-1)}
+            >
+              <Button type="dashed" htmlType="button">
+                <CloseOutlined />
+                Cancelar
+              </Button>
+            </Popconfirm>
+            <Button type="primary" htmlType="submit">
+              <SendOutlined />
+              Enviar dados
+            </Button>
+          </Space>
         </div>
       </Form>
     </PageContainer>
