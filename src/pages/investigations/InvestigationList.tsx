@@ -4,6 +4,8 @@ import type { ColumnsType } from "antd/es/table";
 import PageContainer from "../../components/container/Container";
 import { EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { apiAuth } from "../../helpers/api";
+import { useEffect, useMemo, useState } from "react";
 
 interface DataType {
   key: string;
@@ -16,12 +18,25 @@ interface DataType {
 const Investigationlist = () => {
   const navigate = useNavigate();
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      apiAuth.get("/investigations").then((res) => {
+        setData(res.data);
+      });
+    }
+
+    fetchData();
+  }, []);
+
+  const memoizedData = useMemo(() => data, [data]);
+
   const columns: ColumnsType<DataType> = [
     {
       title: "Nome",
       dataIndex: "name",
       key: "name",
-      /* render: (text) => <a>{text}</a>, */
     },
     {
       title: "Autor",
@@ -40,12 +55,8 @@ const Investigationlist = () => {
       render: (_, { tags }) => (
         <>
           {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
             return (
-              <Tag color={color} key={tag}>
+              <Tag color="geekblue" key={tag}>
                 {tag.toUpperCase()}
               </Tag>
             );
@@ -73,34 +84,10 @@ const Investigationlist = () => {
     },
   ];
 
-  const data: DataType[] = [
-    {
-      key: "1",
-      name: "Investigação 1",
-      author: "John Brown",
-      tags: ["joão pereira", "furto"],
-      uf: "SP",
-    },
-    {
-      key: "2",
-      name: "Investigação 2",
-      author: "Jim Green",
-      tags: ["estelionato", "pedro rocha"],
-      uf: "DF",
-    },
-    {
-      key: "3",
-      name: "Investigação 3",
-      author: "Joe Black",
-      tags: ["john", "importante", "procurado"],
-      uf: "MG",
-    },
-  ];
-
   return (
     <PageContainer>
       <Typography.Title>Listagem de investigações</Typography.Title>
-      <Table dataSource={data} columns={columns} />
+      <Table dataSource={memoizedData} columns={columns} />
     </PageContainer>
   );
 };

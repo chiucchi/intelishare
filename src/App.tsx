@@ -41,7 +41,7 @@ function App({ children }: { children: React.ReactNode }) {
           size="middle"
           style={{ marginLeft: "16px", cursor: "pointer" }}
           onClick={() => {
-            navigate("profile");
+            navigate("/profile");
           }}
         >
           <Avatar
@@ -95,7 +95,7 @@ function App({ children }: { children: React.ReactNode }) {
                 { label: "Perfil", key: "profile", icon: <UserOutlined /> },
                 {
                   label: "Minhas investigações",
-                  key: "my-investigations",
+                  key: "profile/investigations",
                   icon: <ContainerOutlined />,
                 },
                 { label: "Sair", key: "logout", icon: <LogoutOutlined /> },

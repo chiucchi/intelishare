@@ -36,10 +36,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           }
         />
         <Route
-          path="my-investigations"
+          path="profile/investigations"
           element={
             <App>
-              <Investigationlist />
+              <Investigationlist />{" "}
+              {/* ver como que vai ser essa listagem aqui, pode ser passando uma prop avisando */}
             </App>
           }
         />
