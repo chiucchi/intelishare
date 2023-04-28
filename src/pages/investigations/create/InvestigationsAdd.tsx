@@ -81,9 +81,6 @@ const InvestigationsAdd = () => {
   };
 
   const onFinish = (values: any) => {
-    if (!values.isPublic) {
-      values.isPublic = true;
-    }
     if (!values.involveds) {
       values.involveds = [];
     }
@@ -115,7 +112,11 @@ const InvestigationsAdd = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    notification.open({
+      type: "error",
+      message: "Ocorreu um erro ao criar a investigação",
+      description: errorInfo,
+    });
   };
 
   const handleChange = () => {
@@ -165,7 +166,7 @@ const InvestigationsAdd = () => {
                 },
               ]}
             >
-              <DatePicker onChange={onChangeDate} />
+              <DatePicker onChange={onChangeDate} format="DD/MM/YYYY" />
             </Form.Item>
           </Col>
           <Col span={8}>

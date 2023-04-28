@@ -117,7 +117,7 @@ const InvestigationDetail = () => {
           </Col>
           <Col span={8}>
             <Form.Item label="Data" name="date">
-              <DatePicker disabled />
+              <DatePicker disabled format="DD/MM/YYYY" />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -131,19 +131,19 @@ const InvestigationDetail = () => {
             </Form.Item>
           </Col>
         </Row>
-        {checked /* ver se o array de envolvidos é maior q 0 */ && (
+        {checked && (
           <>
             <Divider />
             <Typography.Title level={4}>Envolvidos</Typography.Title>
             <Form.List name="involveds">
-              {(fields) => {
+              {(involveds) => {
                 return (
                   <>
-                    {fields.map((field) => (
+                    {involveds.map((field) => (
                       <Row gutter={16} key={field.key} align="middle">
                         <Col span={12}>
                           <Form.Item {...field} name={[field.name, "involved"]}>
-                            <Input />
+                            <Input value={field.name} />
                           </Form.Item>
                         </Col>
                         <Col span={6} style={{ marginBottom: "24px" }}></Col>

@@ -1,7 +1,6 @@
-import { Button, Form, Input, Space, Typography } from "antd";
+import { Button, Form, Input, Space, Typography, notification } from "antd";
 import Image from "../../assets/vector.svg";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Cookies from "js-cookie";
 import { api } from "../../helpers/api";
 
@@ -17,8 +16,11 @@ function Login() {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    // notificacao da mensagem de erro
-    console.log("Failed:", errorInfo);
+    notification.open({
+      type: "error",
+      message: "Ocorreu um erro ao logar",
+      description: errorInfo,
+    });
   };
 
   return (
