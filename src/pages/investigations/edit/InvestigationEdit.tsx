@@ -16,7 +16,8 @@ import {
   notification,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as dayjs from "dayjs";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import type { SelectProps } from "antd";
 import {
@@ -25,13 +26,18 @@ import {
   PlusOutlined,
   SendOutlined,
 } from "@ant-design/icons";
-import { extractUser } from "../../../helpers/getUser";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { apiAuth } from "../../../helpers/api";
 
 interface DataType {
-  key: string;
-  file: string;
-  extension: string;
+  id: number;
+  name: string;
+  author: string;
+  date: Date; // talvez nao
+  uf: string;
+  isPublic: boolean;
+  involveds: string[];
+  files: string; // pensar nisso
   tags: string[];
 }
 
@@ -39,10 +45,11 @@ const InvestigationEdit = () => {
   const [form] = Form.useForm();
   const [checked, setChecked] = useState(false);
   const [file, setFile] = useState<File>();
-  const userData = extractUser();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [data, setData] = useState<DataType>();
 
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -93,15 +100,37 @@ const InvestigationEdit = () => {
   };
 
   const onFinish = (values: any) => {
-    console.log("Success:", values);
+    console.log(values);
+    if (!values.isPublic) {
+      values.isPublic = true;
+    }
+    if (!values.involveds) {
+      values.involveds = [];
+    }
+    if (!values.tags) {
+      values.tags = selectedItems;
+    }
+    apiAuth
+      .patch(`/investigations/${id}`, values)
+      .then(() => {
+        notification.open({
+          type: "success",
+          message: "A investigação foi editada com sucesso",
+          description: "Agora a sua investigação está atualizada",
+        });
+        navigate(-1);
+      })
+      .catch((err) => {
+        notification.open({
+          type: "error",
+          message: "Ocorreu um erro ao editar a investigação",
+          description: err.response.data.message,
+        });
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
-  };
-
-  const handleChange = () => {
-    form.setFieldsValue({ sights: [] });
   };
 
   const options: SelectProps["options"] = [];
@@ -117,12 +146,40 @@ const InvestigationEdit = () => {
     console.log(`switch to ${checked}`);
   };
 
+  useEffect(() => {
+    async function fetchData() {
+      apiAuth.get(`/investigations/${id}`).then((res) => {
+        setData(res.data);
+      });
+    }
+
+    fetchData();
+    if (data?.involveds ? data.involveds.length > 0 : false) {
+      setChecked(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        name: data.name,
+        author: data.author,
+        date: dayjs(data.date),
+        involveds: data.involveds,
+        tags: data.tags,
+      });
+    }
+    if (data?.involveds ? data.involveds.length > 0 : false) {
+      setChecked(true);
+    }
+  }, [data]);
+
   return (
     <PageContainer style={{ height: "100%" }}>
       <Typography.Title>Editar dados</Typography.Title>
       <Form
         form={form}
-        name="add-investigation"
+        name="edit-investigation"
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -142,11 +199,7 @@ const InvestigationEdit = () => {
           </Col>
           <Col span={12}>
             <Form.Item label="Autor" name="author">
-              <Input
-                defaultValue={userData?.name}
-                onChange={() => undefined}
-                disabled
-              />
+              <Input onChange={() => undefined} disabled />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -166,7 +219,7 @@ const InvestigationEdit = () => {
           <Col span={8}>
             <Form.Item label="Privacidade" name="isPublic">
               <Switch
-                defaultChecked
+                defaultChecked={data?.isPublic}
                 onChange={onChangeSwitch}
                 checkedChildren="Pública"
                 unCheckedChildren="Privada"
@@ -270,7 +323,7 @@ const InvestigationEdit = () => {
           <Space>
             <Popconfirm
               title="Cancelar edição"
-              description="Tem certeza que quer dispensar as alterações?"
+              description="Tem certeza que deseja dispensar as alterações?"
               okText="Sim"
               cancelText="Não"
               onConfirm={() => navigate(-1)}

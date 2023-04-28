@@ -31,15 +31,15 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           path="investigations"
           element={
             <App>
-              <Investigationlist />
+              <Investigationlist userInvestigations={false} />
             </App>
           }
         />
         <Route
-          path="my-investigations"
+          path="profile/investigations"
           element={
             <App>
-              <Investigationlist />
+              <Investigationlist userInvestigations />{" "}
             </App>
           }
         />
@@ -52,7 +52,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           }
         />
         <Route
-          path="investigations/edit"
+          path="profile/investigations/edit/:id"
           element={
             <App>
               <InvestigationEdit />
@@ -60,7 +60,15 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           }
         />
         <Route
-          path="investigations/detail"
+          path="investigations/detail/:id"
+          element={
+            <App>
+              <InvestigationDetail />
+            </App>
+          }
+        />
+        <Route
+          path="profile/investigations/detail/:id"
           element={
             <App>
               <InvestigationDetail />

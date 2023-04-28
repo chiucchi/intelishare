@@ -14,16 +14,23 @@ import {
   Typography,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SelectProps } from "antd";
 import { RollbackOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { extractUser } from "../../../helpers/getUser";
+import { apiAuth } from "../../../helpers/api";
+import * as dayjs from "dayjs";
 
 interface DataType {
-  key: string;
-  file: string;
-  extension: string;
+  id: number;
+  name: string;
+  author: string;
+  date: Date;
+  uf: string;
+  isPublic: boolean;
+  involveds: string[];
+  files: string; // pensar nisso
   tags: string[];
 }
 
@@ -31,27 +38,12 @@ const InvestigationDetail = () => {
   const [form] = Form.useForm();
   const [checked, setChecked] = useState(true);
   const [files, setFiles] = useState<File[]>([]);
-  const [filenames, setFilenames] = useState<string[]>([]);
-  const [mainFile, setMainFile] = useState<string>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
   const userData = extractUser();
-  const [selectedItems, setSelectedItems] = useState<string[]>([
-    "furto",
-    "qualificado",
-    "quadrilha",
-    "centro",
-  ]);
 
-  const onChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    console.log("Change:", e.target.value);
-  };
+  const [data, setData] = useState<DataType>();
 
-  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
@@ -63,12 +55,33 @@ const InvestigationDetail = () => {
 
   const options: SelectProps["options"] = [];
 
-  for (let i = 10; i < 36; i++) {
-    options.push({
-      value: i.toString(36) + i,
-      label: i.toString(36) + i,
-    });
-  }
+  useEffect(() => {
+    async function fetchData() {
+      apiAuth.get(`/investigations/${id}`).then((res) => {
+        setData(res.data);
+      });
+    }
+
+    fetchData();
+    if (data?.involveds ? data.involveds.length > 0 : false) {
+      setChecked(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        name: data.name,
+        author: data.author,
+        date: dayjs(data.date),
+        involveds: data.involveds,
+        tags: data.tags,
+      });
+    }
+    if (data?.involveds ? data.involveds.length > 0 : false) {
+      setChecked(true);
+    }
+  }, [data]);
 
   return (
     <PageContainer style={{ height: "100%" }}>
@@ -104,7 +117,7 @@ const InvestigationDetail = () => {
           </Col>
           <Col span={8}>
             <Form.Item label="Data" name="date">
-              <DatePicker onChange={onChangeDate} disabled />
+              <DatePicker disabled />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -151,7 +164,7 @@ const InvestigationDetail = () => {
         <Space direction="vertical" style={{ display: "flex" }}>
           <Typography.Title level={4}>Tags relevantes</Typography.Title>
           <Form.Item name="tags">
-            {selectedItems.map((item) => (
+            {data?.tags.map((item) => (
               <Tag color="blue" key={item}>
                 {item}
               </Tag>
@@ -165,7 +178,7 @@ const InvestigationDetail = () => {
             right: "32px",
           }}
         >
-          <Button type="primary" onClick={() => navigate("/investigations")}>
+          <Button type="primary" onClick={() => navigate(-1)}>
             <RollbackOutlined />
             Voltar
           </Button>

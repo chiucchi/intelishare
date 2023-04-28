@@ -1,7 +1,5 @@
 import {
-  Alert,
   Button,
-  Card,
   Checkbox,
   Col,
   DatePicker,
@@ -14,22 +12,19 @@ import {
   Space,
   Switch,
   Typography,
-  Upload,
-  message,
   notification,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
 import { useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import type { UploadProps } from "antd";
 import {
   MinusCircleOutlined,
   PlusOutlined,
   SendOutlined,
-  UploadOutlined,
 } from "@ant-design/icons";
 import { extractUser } from "../../../helpers/getUser";
-const { Option } = Select;
+import { apiAuth } from "../../../helpers/api";
+import { useNavigate } from "react-router-dom";
 
 const InvestigationsAdd = () => {
   const [form] = Form.useForm();
@@ -37,6 +32,7 @@ const InvestigationsAdd = () => {
   const [file, setFile] = useState<File>();
   const userData = extractUser();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -49,7 +45,6 @@ const InvestigationsAdd = () => {
   };
 
   const onChangeCheck = (e: CheckboxChangeEvent) => {
-    console.log("checked = ", e.target.checked);
     form.setFieldsValue({ involveds: "" });
     setChecked(e.target.checked);
   };
@@ -71,7 +66,6 @@ const InvestigationsAdd = () => {
     } */
 
     // check if file is a zip
-    console.log(file.type);
     if (
       file.type !== "application/zip" &&
       file.type !== "application/x-zip-compressed"
@@ -87,24 +81,45 @@ const InvestigationsAdd = () => {
   };
 
   const onFinish = (values: any) => {
-    console.log("Success:", values);
+    if (!values.isPublic) {
+      values.isPublic = true;
+    }
+    if (!values.involveds) {
+      values.involveds = [];
+    }
+    if (!values.tags) {
+      values.tags = selectedItems;
+    }
+    if (!values.author) {
+      values.author = userData?.name;
+    }
+    values.permitedUsers = [userData?.id];
+    apiAuth
+      .post("/investigations", values)
+      .then(() => {
+        notification.open({
+          type: "success",
+          message: "A investigação foi criada com sucesso",
+          description:
+            "Agora a sua investigação está disponível e faz parte do nosso banco de dados",
+        });
+        navigate("/investigations");
+      })
+      .catch((err) => {
+        notification.open({
+          type: "error",
+          message: "Ocorreu um erro ao criar a investigação",
+          description: err.response.data.message,
+        });
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
 
-  const sights = {
-    Beijing: ["Tiananmen", "Great Wall"],
-    Shanghai: ["Oriental Pearl", "The Bund"],
-  };
-
   const handleChange = () => {
     form.setFieldsValue({ sights: [] });
-  };
-
-  const onChangeSwitch = (checked: boolean) => {
-    console.log(`switch to ${checked}`);
   };
 
   return (
@@ -157,7 +172,6 @@ const InvestigationsAdd = () => {
             <Form.Item label="Privacidade" name="isPublic">
               <Switch
                 defaultChecked
-                onChange={onChangeSwitch}
                 checkedChildren="Pública"
                 unCheckedChildren="Privada"
               />
