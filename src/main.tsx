@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           path="investigations"
           element={
             <App>
-              <Investigationlist />
+              <Investigationlist userInvestigations={false} />
             </App>
           }
         />
@@ -39,8 +39,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           path="profile/investigations"
           element={
             <App>
-              <Investigationlist />{" "}
-              {/* ver como que vai ser essa listagem aqui, pode ser passando uma prop avisando */}
+              <Investigationlist userInvestigations />{" "}
             </App>
           }
         />
@@ -53,7 +52,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           }
         />
         <Route
-          path="investigations/edit"
+          path="profile/investigations/edit/:id"
           element={
             <App>
               <InvestigationEdit />
@@ -61,7 +60,15 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           }
         />
         <Route
-          path="investigations/detail"
+          path="investigations/detail/:id"
+          element={
+            <App>
+              <InvestigationDetail />
+            </App>
+          }
+        />
+        <Route
+          path="profile/investigations/detail/:id"
           element={
             <App>
               <InvestigationDetail />

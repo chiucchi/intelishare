@@ -94,15 +94,24 @@ const InvestigationsAdd = () => {
       values.author = userData?.name;
     }
     values.permitedUsers = [userData?.id];
-    apiAuth.post("/investigations", values).then(() => {
-      notification.open({
-        type: "success",
-        message: "A investigação foi criada com sucesso",
-        description:
-          "Agora a sua investigação está disponível e faz parte do nosso banco de dados",
+    apiAuth
+      .post("/investigations", values)
+      .then(() => {
+        notification.open({
+          type: "success",
+          message: "A investigação foi criada com sucesso",
+          description:
+            "Agora a sua investigação está disponível e faz parte do nosso banco de dados",
+        });
+        navigate("/investigations");
+      })
+      .catch((err) => {
+        notification.open({
+          type: "error",
+          message: "Ocorreu um erro ao criar a investigação",
+          description: err.response.data.message,
+        });
       });
-      navigate("/investigations");
-    });
   };
 
   const onFinishFailed = (errorInfo: any) => {

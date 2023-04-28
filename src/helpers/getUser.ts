@@ -29,6 +29,5 @@ export const extractUser = () => {
     decoded = jwt_decode(token);
   }
 
-  console.log("decoded: ", decoded);
   return decoded;
 };

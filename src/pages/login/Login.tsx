@@ -10,6 +10,7 @@ function Login() {
 
   const onFinish = async (values: any) => {
     await api.post("http://localhost:3000/login", values).then((res) => {
+      Cookies.remove("token"); // para renovar o token caso esteja expirado // fazer isso de outro jeito com o refresh token
       Cookies.set("token", res.data.token);
       navigate("/home");
     });
