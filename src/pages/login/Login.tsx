@@ -8,20 +8,11 @@ function Login() {
   const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
-    await api
-      .post("http://localhost:3000/login", values)
-      .then((res) => {
-        Cookies.remove("token"); // para renovar o token caso esteja expirado // fazer isso de outro jeito com o refresh token
-        Cookies.set("token", res.data.token);
-        navigate("/home");
-      })
-      .catch((err) => {
-        notification.open({
-          type: "error",
-          message: "Ocorreu um erro ao logar",
-          description: err.response.data.message,
-        });
-      });
+    await api.post("/login", values).then((res) => {
+      Cookies.remove("token"); // para renovar o token caso esteja expirado // fazer isso de outro jeito com o refresh token
+      Cookies.set("token", res.data.token);
+      navigate("/home");
+    });
   };
 
   const onFinishFailed = (errorInfo: any) => {
