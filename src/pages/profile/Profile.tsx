@@ -63,7 +63,7 @@ const Profile = () => {
               <Input.Password value="38291732189" onChange={onChange} />
             </Col>
             <Col span={6}>
-              <DatePicker onChange={onChangeDate} />
+              <DatePicker onChange={onChangeDate} format="DD/MM/YYYY" />
             </Col>
             <Col span={6}>
               <Select

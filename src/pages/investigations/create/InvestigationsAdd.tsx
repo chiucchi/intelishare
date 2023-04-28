@@ -166,7 +166,7 @@ const InvestigationsAdd = () => {
                 },
               ]}
             >
-              <DatePicker onChange={onChangeDate} />
+              <DatePicker onChange={onChangeDate} format="DD/MM/YYYY" />
             </Form.Item>
           </Col>
           <Col span={8}>
