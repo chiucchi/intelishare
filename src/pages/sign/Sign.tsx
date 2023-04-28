@@ -17,7 +17,7 @@ function Sign() {
 
   const onFinish = async (values: any) => {
     await api
-      .post("http://localhost:3000/user", values)
+      .post("/user", values)
       .then((res) => {
         notification.open({
           type: "success",
