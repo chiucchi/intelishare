@@ -7,6 +7,7 @@ import {
   Button,
   Popconfirm,
   notification,
+  Empty,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
@@ -35,21 +36,25 @@ const Investigationlist = (props: { userInvestigations: boolean }) => {
 
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      if (!props.userInvestigations) {
-        apiAuth.get("/investigations").then((res) => {
-          setData(res.data);
-        });
-      } else {
-        apiAuth.get("/profile/investigations").then((res) => {
-          setData(res.data);
-        });
-      }
+  async function fetchData() {
+    if (!props.userInvestigations) {
+      apiAuth.get("/investigations").then((res) => {
+        setData(res.data);
+      });
+    } else {
+      apiAuth.get("/profile/investigations").then((res) => {
+        setData(res.data);
+      });
     }
+  }
 
+  useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [props.userInvestigations]);
 
   const memoizedData = useMemo(() => data, [data]);
 
@@ -157,7 +162,18 @@ const Investigationlist = (props: { userInvestigations: boolean }) => {
           ? `Minhas investigações`
           : `Listagem de investigações`}
       </Typography.Title>
-      <Table dataSource={memoizedData} columns={columns} />
+      <Table
+        dataSource={memoizedData}
+        columns={columns}
+        locale={{
+          emptyText: (
+            <Empty
+              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+              description="Não há investigações para serem exibidas."
+            />
+          ),
+        }}
+      />
       {/* pensando em botar as q eu tenho acesso aqui dps de um divider, ou botar uma outra listagem no menu*/}
     </PageContainer>
   );

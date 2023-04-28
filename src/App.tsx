@@ -20,6 +20,7 @@ function App({ children }: { children: React.ReactNode }) {
   const { Content, Sider } = Layout;
   const navigate = useNavigate();
   const userData = extractUser();
+  console.log("userData", userData);
 
   return (
     <Layout hasSider>
@@ -53,10 +54,10 @@ function App({ children }: { children: React.ReactNode }) {
           />
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Typography.Title level={5} style={{ color: "#f0f0f0" }}>
-              {userData?.name}
+              {userData?.name || "Usuário"}
             </Typography.Title>
             <Typography.Text type="secondary" style={{ color: "#f0f0f0" }}>
-              {userData?.email}
+              {userData?.email || ""}
             </Typography.Text>
           </div>
         </Space>

@@ -1,7 +1,6 @@
-import { Button, Form, Input, Space, Typography } from "antd";
+import { Button, Form, Input, Space, Typography, notification } from "antd";
 import Image from "../../assets/vector.svg";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Cookies from "js-cookie";
 import { api } from "../../helpers/api";
 
@@ -9,16 +8,28 @@ function Login() {
   const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
-    await api.post("http://localhost:3000/login", values).then((res) => {
-      Cookies.remove("token"); // para renovar o token caso esteja expirado // fazer isso de outro jeito com o refresh token
-      Cookies.set("token", res.data.token);
-      navigate("/home");
-    });
+    await api
+      .post("http://localhost:3000/login", values)
+      .then((res) => {
+        Cookies.remove("token"); // para renovar o token caso esteja expirado // fazer isso de outro jeito com o refresh token
+        Cookies.set("token", res.data.token);
+        navigate("/home");
+      })
+      .catch((err) => {
+        notification.open({
+          type: "error",
+          message: "Ocorreu um erro ao logar",
+          description: err.response.data.message,
+        });
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    // notificacao da mensagem de erro
-    console.log("Failed:", errorInfo);
+    notification.open({
+      type: "error",
+      message: "Ocorreu um erro ao logar",
+      description: errorInfo,
+    });
   };
 
   return (
