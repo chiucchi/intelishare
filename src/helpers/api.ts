@@ -2,12 +2,17 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+const url =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://intelishare-api-prod.up.railway.app/";
+
 export const api = axios.create({
-  baseURL: "https://intelishare-api-prod.up.railway.app/",
+  baseURL: url,
 });
 
 export const apiAuth = axios.create({
-  baseURL: "https://intelishare-api-prod.up.railway.app/",
+  baseURL: url,
   headers: {
     Authorization: `Bearer ${Cookies.get("token")}`,
   },
