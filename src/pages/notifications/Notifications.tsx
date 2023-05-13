@@ -10,15 +10,26 @@ const Notifications = () => {
   // get notifications from userdata
   const data = userData.notifications;
 
-  const returnActions = (type: string) => {
-    switch (type) {
+  function visualizeInvestigation() {}
+
+  const returnActions = (type: any) => {
+    switch (type.type) {
       case "request-access":
-        return [
-          <Button type="primary">Aprovar</Button>,
-          <Button type="dashed">Reprovar</Button>,
-        ];
+        if (type.response === false) {
+          return [
+            <Button type="primary">Aprovar</Button>,
+            <Button type="dashed">Reprovar</Button>,
+          ];
+        } else
+          return [
+            <Button type="dashed" disabled>
+              Respondido
+            </Button>,
+          ];
       case "access-response":
-        return [<Button type="primary">Visualizar</Button>]; // checar se foi aprovado ou reprovado, se reprovado, não mostrar o botão
+        if (type.response === true)
+          return [<Button type="primary">Visualizar</Button>];
+        else return [];
       case "inform":
         return [<Button type="primary">Visualizar</Button>]; // checar se a investigação é privada ou publica, se publica mostrar o botão de visualizar, se não, mostrar o botão de solicitar acesso
       default:
@@ -29,15 +40,15 @@ const Notifications = () => {
   return (
     <PageContainer>
       <Typography.Title>Notificações</Typography.Title>
-      {data.length > 0 ? (
+      {dados.length > 0 ? (
         <List
           itemLayout="horizontal"
-          dataSource={data}
+          dataSource={dados}
           renderItem={(item, index) => (
-            <List.Item actions={returnActions(item.type)}>
+            <List.Item actions={returnActions(item)}>
               <List.Item.Meta
                 avatar={<NotificationOutlined />}
-                title={<a href="https://ant.design">{item.title}</a>}
+                title={item.title}
                 description={item.description}
               />
             </List.Item>

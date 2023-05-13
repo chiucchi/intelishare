@@ -5,6 +5,7 @@ export const dados = [
     userId: "123456789",
     investigationId: "123456789",
     description: "",
+    response: true, // ainda nao tem resposta ou ja tem dependendo do valor
   },
   {
     title: "O seu acesso à investigação X foi aprovado",
@@ -12,6 +13,15 @@ export const dados = [
     userId: "123456789",
     investigationId: "123456789",
     description: "",
+    response: true,
+  },
+  {
+    title: "O seu acesso à investigação X foi reprovado",
+    type: "access-response",
+    userId: "123456789",
+    investigationId: "123456789",
+    description: "",
+    response: false,
   },
   {
     title:

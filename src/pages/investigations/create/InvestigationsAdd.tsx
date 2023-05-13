@@ -143,7 +143,7 @@ const InvestigationsAdd = () => {
                 { required: true, message: "Por favor adicione um nome" },
               ]}
             >
-              <Input showCount maxLength={40} onChange={onChange} />
+              <Input showCount maxLength={60} onChange={onChange} />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -151,7 +151,7 @@ const InvestigationsAdd = () => {
               <Input
                 defaultValue={userData?.name}
                 onChange={() => undefined}
-                disabled
+                readOnly
               />
             </Form.Item>
           </Col>
@@ -197,7 +197,7 @@ const InvestigationsAdd = () => {
                         <Col span={12}>
                           <Form.Item
                             {...field}
-                            name={[field.name, "involved"]}
+                            name={[field.name]}
                             rules={[
                               {
                                 required: true,
