@@ -94,7 +94,6 @@ const InvestigationEdit = () => {
   };
 
   const onFinish = (values: any) => {
-    console.log(values);
     if (!values.isPublic) {
       values.isPublic = true;
     }
@@ -162,7 +161,6 @@ const InvestigationEdit = () => {
         tags: data.tags,
         isPublic: data.isPublic,
       });
-      console.log(form.getFieldValue("involveds"));
       setSwitchState(data.isPublic);
       form.setFields([
         {
@@ -241,52 +239,44 @@ const InvestigationEdit = () => {
             <Form.List name="involveds">
               {(fields, { add, remove }) => {
                 return (
-                  console.log("fields", fields),
-                  (
-                    <>
-                      {fields.map(
-                        (field) => (
-                          console.log("field", field),
-                          (
-                            <Row gutter={16} key={field.key} align="middle">
-                              <Col span={12}>
-                                <Form.Item
-                                  {...field}
-                                  name={[field.name]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message:
-                                        "Favor adicionar um nome, ou remover o envolvido",
-                                    },
-                                  ]}
-                                >
-                                  <Input />
-                                </Form.Item>
-                              </Col>
-                              <Col span={6} style={{ marginBottom: "24px" }}>
-                                <MinusCircleOutlined
-                                  onClick={() => remove(field.name)}
-                                />
-                              </Col>
-                            </Row>
-                          )
-                        )
-                      )}
-                      <Row>
+                  <>
+                    {fields.map((field) => (
+                      <Row gutter={16} key={field.key} align="middle">
                         <Col span={12}>
-                          <Button
-                            type="dashed"
-                            onClick={() => add()}
-                            block
-                            icon={<PlusOutlined />}
+                          <Form.Item
+                            {...field}
+                            name={[field.name]}
+                            rules={[
+                              {
+                                required: true,
+                                message:
+                                  "Favor adicionar um nome, ou remover o envolvido",
+                              },
+                            ]}
                           >
-                            Adicionar envolvido
-                          </Button>
+                            <Input />
+                          </Form.Item>
+                        </Col>
+                        <Col span={6} style={{ marginBottom: "24px" }}>
+                          <MinusCircleOutlined
+                            onClick={() => remove(field.name)}
+                          />
                         </Col>
                       </Row>
-                    </>
-                  )
+                    ))}
+                    <Row>
+                      <Col span={12}>
+                        <Button
+                          type="dashed"
+                          onClick={() => add()}
+                          block
+                          icon={<PlusOutlined />}
+                        >
+                          Adicionar envolvido
+                        </Button>
+                      </Col>
+                    </Row>
+                  </>
                 );
               }}
             </Form.List>

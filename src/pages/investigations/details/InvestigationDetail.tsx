@@ -47,13 +47,9 @@ const InvestigationDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-  };
+  const onFinish = (values: any) => {};
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
+  const onFinishFailed = (errorInfo: any) => {};
 
   useEffect(() => {
     async function fetchData() {
@@ -67,8 +63,6 @@ const InvestigationDetail = () => {
       setChecked(true);
     }
   }, []);
-
-  console.log("involveds: ", data?.involveds);
 
   useEffect(() => {
     if (data) {

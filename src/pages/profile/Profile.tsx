@@ -14,21 +14,16 @@ import {
 } from "antd";
 import PageContainer from "../../components/container/Container";
 import { UserOutlined } from "@ant-design/icons";
+import { ufData } from "../../mocks/uf-mock";
 
 const Profile = () => {
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    console.log("Change:", e.target.value);
-  };
+  ) => {};
 
-  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
+  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {};
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
+  const handleChange = (value: string) => {};
 
   return (
     <PageContainer>
@@ -40,7 +35,6 @@ const Profile = () => {
             size="middle"
             style={{ cursor: "pointer" }}
             onClick={() => {
-              console.log("clicked");
               // change profile pic
             }}
           >
@@ -67,14 +61,10 @@ const Profile = () => {
             </Col>
             <Col span={6}>
               <Select
-                defaultValue="RJ"
+                defaultValue="MG"
                 style={{ width: 120 }}
                 onChange={handleChange}
-                options={[
-                  { value: "rj", label: "Rj" },
-                  { value: "sp", label: "Sp" },
-                  { value: "mg", label: "Mg" },
-                ]}
+                options={ufData}
               />
             </Col>
           </Row>

@@ -11,6 +11,7 @@ import {
 import Image from "../../assets/vector.svg";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../helpers/api";
+import { ufData } from "../../mocks/uf-mock";
 
 function Sign() {
   const navigate = useNavigate();
@@ -150,17 +151,7 @@ function Sign() {
                     },
                   ]}
                 >
-                  <Select
-                    style={{ width: 120 }}
-                    onChange={() => {
-                      console.log("mudou");
-                    }}
-                    options={[
-                      { value: "rj", label: "Rj" },
-                      { value: "sp", label: "Sp" },
-                      { value: "mg", label: "Mg" },
-                    ]}
-                  />
+                  <Select style={{ width: 120 }} options={ufData} />
                 </Form.Item>
               </Space>
               <Form.Item

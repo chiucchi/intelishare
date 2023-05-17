@@ -20,7 +20,6 @@ function App({ children }: { children: React.ReactNode }) {
   const { Content, Sider } = Layout;
   const navigate = useNavigate();
   const userData = extractUser();
-  console.log("userData", userData);
 
   return (
     <Layout hasSider>

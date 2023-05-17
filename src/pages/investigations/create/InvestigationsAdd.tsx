@@ -36,13 +36,9 @@ const InvestigationsAdd = () => {
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    console.log("Change:", e.target.value);
-  };
+  ) => {};
 
-  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
+  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {};
 
   const onChangeCheck = (e: CheckboxChangeEvent) => {
     form.setFieldsValue({ involveds: "" });
