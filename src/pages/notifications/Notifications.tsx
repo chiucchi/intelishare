@@ -1,24 +1,60 @@
 import { Button, Empty, List, Space, Typography } from "antd";
 import PageContainer from "../../components/container/Container";
 import { NotificationOutlined } from "@ant-design/icons";
-import { extractUser, getUser } from "../../helpers/getUser";
-import { dados } from "./notifications-mock";
+import { getUserNotifications } from "../../helpers/getUser";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+interface Notification {
+  title: string;
+  description: string;
+  type: string;
+  response?: boolean;
+  askAccess?: boolean;
+  relatedInvestigationId: string;
+  relatedInvestigationAuthor: string;
+}
 
 const Notifications = () => {
-  const userData = extractUser();
+  const [data, setData] = useState<Notification[]>([]);
+  const navigate = useNavigate();
 
-  // get notifications from userdata
-  const data = userData.notifications;
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const userNotifications = await getUserNotifications();
+      const parsedNotifications = userNotifications.map(
+        (notification: String) => JSON.parse(notification as string)
+      );
+      setData(parsedNotifications);
+    };
+    fetchNotifications();
+  }, []);
 
-  function visualizeInvestigation() {}
+  function visualizeInvestigation(item: any) {
+    navigate(`/investigations/detail/${item.relatedInvestigationId}`);
+  }
 
-  const returnActions = (type: any) => {
-    switch (type.type) {
-      case "request-access":
-        if (type.response === false) {
+  const returnActions = (item: any) => {
+    switch (item.type) {
+      case "access-request":
+        if (item.response === false) {
           return [
-            <Button type="primary">Aprovar</Button>,
-            <Button type="dashed">Reprovar</Button>,
+            <Button
+              type="primary"
+              onClick={() => {
+                // send to backend the response
+              }}
+            >
+              Aprovar
+            </Button>,
+            <Button
+              type="dashed"
+              onClick={() => {
+                // send to backend the response
+              }}
+            >
+              Reprovar
+            </Button>,
           ];
         } else
           return [
@@ -27,11 +63,24 @@ const Notifications = () => {
             </Button>,
           ];
       case "access-response":
-        if (type.response === true)
+        if (item.response === true)
           return [<Button type="primary">Visualizar</Button>];
         else return [];
       case "inform":
-        return [<Button type="primary">Visualizar</Button>]; // checar se a investigação é privada ou publica, se publica mostrar o botão de visualizar, se não, mostrar o botão de solicitar acesso
+        return [
+          <Button type="primary" onClick={() => visualizeInvestigation(item)}>
+            Visualizar
+          </Button>,
+        ]; // checar se a investigação é privada ou publica, se publica mostrar o botão de visualizar, se não, mostrar o botão de solicitar acesso
+      case "inform-ask-access":
+        if (item.askAccess === false)
+          return [<Button type="primary">Solicitar Acesso</Button>];
+        else
+          return [
+            <Button type="dashed" disabled>
+              Pedido enviado
+            </Button>,
+          ];
       default:
         return [];
     }
@@ -40,11 +89,11 @@ const Notifications = () => {
   return (
     <PageContainer>
       <Typography.Title>Notificações</Typography.Title>
-      {dados.length > 0 ? (
+      {data.length > 0 ? (
         <List
           itemLayout="horizontal"
-          dataSource={dados}
-          renderItem={(item, index) => (
+          dataSource={data}
+          renderItem={(item) => (
             <List.Item actions={returnActions(item)}>
               <List.Item.Meta
                 avatar={<NotificationOutlined />}
