@@ -1,18 +1,18 @@
 import { Button, Form, Input, Space, Typography, notification } from "antd";
 import Image from "../../assets/vector.svg";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import Cookies from "universal-cookie";
 import { api } from "../../helpers/api";
 
 function Login() {
   const navigate = useNavigate();
+  const cookies = new Cookies();
 
   const onFinish = async (values: any) => {
     await api
       .post("/login", values)
       .then((res) => {
-        Cookies.remove("token"); // para renovar o token caso esteja expirado // fazer isso de outro jeito com o refresh token
-        Cookies.set("token", res.data.token);
+        cookies.set("token", res.data.token, { path: "/" });
         navigate("/home");
       })
       .catch((err) => {
