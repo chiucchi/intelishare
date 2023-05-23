@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "tsc": "tsc",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "pnpm run tsc && vite build",
     "preview": "vite preview",
     "start": "pnpm run dev"
   },
@@ -25,7 +26,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
-    "styled-components": "^5.3.9"
+    "styled-components": "^5.3.9",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.3",

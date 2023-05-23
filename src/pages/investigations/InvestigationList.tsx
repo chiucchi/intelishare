@@ -98,8 +98,6 @@ const Investigationlist = (props: { userInvestigations: boolean }) => {
           <Button
             type="text"
             onClick={() => {
-              // fazer a request pra pegar os dados baseado no id aqui, e ai sim passar pra proxima pagina
-              // ou fazer a request na pagina de detalhes também caso a pessoa de refresh na pagina
               navigate(`detail/${record.id}`);
             }}
             size="small"

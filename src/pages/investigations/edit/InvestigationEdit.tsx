@@ -47,27 +47,21 @@ const InvestigationEdit = () => {
   const [file, setFile] = useState<File>();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [data, setData] = useState<DataType>();
+  const [switchState, setSwitchState] = useState(false);
 
   const navigate = useNavigate();
   const { id } = useParams();
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    console.log("Change:", e.target.value);
-  };
+  ) => {};
 
-  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
+  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {};
 
   const onChangeCheck = (e: CheckboxChangeEvent) => {
-    console.log("checked = ", e.target.checked);
     form.setFieldsValue({ involveds: "" });
     setChecked(e.target.checked);
   };
-
-  const handleAddClick = () => {};
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -100,7 +94,6 @@ const InvestigationEdit = () => {
   };
 
   const onFinish = (values: any) => {
-    console.log(values);
     if (!values.isPublic) {
       values.isPublic = true;
     }
@@ -143,7 +136,7 @@ const InvestigationEdit = () => {
   }
 
   const onChangeSwitch = (checked: boolean) => {
-    console.log(`switch to ${checked}`);
+    setSwitchState(checked);
   };
 
   useEffect(() => {
@@ -165,9 +158,16 @@ const InvestigationEdit = () => {
         name: data.name,
         author: data.author,
         date: dayjs(data.date),
-        involveds: data.involveds,
         tags: data.tags,
+        isPublic: data.isPublic,
       });
+      setSwitchState(data.isPublic);
+      form.setFields([
+        {
+          name: "involveds",
+          value: data.involveds,
+        },
+      ]);
     }
     if (data?.involveds ? data.involveds.length > 0 : false) {
       setChecked(true);
@@ -219,7 +219,7 @@ const InvestigationEdit = () => {
           <Col span={8}>
             <Form.Item label="Privacidade" name="isPublic">
               <Switch
-                defaultChecked={data?.isPublic}
+                checked={switchState}
                 onChange={onChangeSwitch}
                 checkedChildren="Pública"
                 unCheckedChildren="Privada"
@@ -245,7 +245,7 @@ const InvestigationEdit = () => {
                         <Col span={12}>
                           <Form.Item
                             {...field}
-                            name={[field.name, "involved"]}
+                            name={[field.name]}
                             rules={[
                               {
                                 required: true,

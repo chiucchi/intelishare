@@ -3,6 +3,7 @@ import {
   Col,
   DatePicker,
   DatePickerProps,
+  Descriptions,
   Divider,
   Form,
   Input,
@@ -39,21 +40,16 @@ const InvestigationDetail = () => {
   const [checked, setChecked] = useState(true);
   const [files, setFiles] = useState<File[]>([]);
   const userData = extractUser();
+  const [switchState, setSwitchState] = useState(false);
 
   const [data, setData] = useState<DataType>();
 
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-  };
+  const onFinish = (values: any) => {};
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
-
-  const options: SelectProps["options"] = [];
+  const onFinishFailed = (errorInfo: any) => {};
 
   useEffect(() => {
     async function fetchData() {
@@ -76,7 +72,9 @@ const InvestigationDetail = () => {
         date: dayjs(data.date),
         involveds: data.involveds,
         tags: data.tags,
+        isPublic: data.isPublic,
       });
+      setSwitchState(data.isPublic);
     }
     if (data?.involveds ? data.involveds.length > 0 : false) {
       setChecked(true);
@@ -123,7 +121,7 @@ const InvestigationDetail = () => {
           <Col span={8}>
             <Form.Item label="Privacidade" name="isPublic">
               <Switch
-                defaultChecked
+                checked={switchState}
                 checkedChildren="Pública"
                 unCheckedChildren="Privada"
                 disabled
@@ -135,24 +133,11 @@ const InvestigationDetail = () => {
           <>
             <Divider />
             <Typography.Title level={4}>Envolvidos</Typography.Title>
-            <Form.List name="involveds">
-              {(involveds) => {
-                return (
-                  <>
-                    {involveds.map((field) => (
-                      <Row gutter={16} key={field.key} align="middle">
-                        <Col span={12}>
-                          <Form.Item {...field} name={[field.name, "involved"]}>
-                            <Input value={field.name} />
-                          </Form.Item>
-                        </Col>
-                        <Col span={6} style={{ marginBottom: "24px" }}></Col>
-                      </Row>
-                    ))}
-                  </>
-                );
-              }}
-            </Form.List>
+            {data?.involveds.map((involved) => (
+              <Descriptions.Item>
+                {involved} <br />
+              </Descriptions.Item>
+            ))}
           </>
         )}
         <Divider />
