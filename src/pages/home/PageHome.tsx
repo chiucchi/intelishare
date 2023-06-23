@@ -1,12 +1,13 @@
-import { extractUser } from "../../helpers/getUser";
+import { useContext } from "react";
 import { Container, WelcomeText } from "./PageHome.styles";
+import UserContext from "../../context/user";
 
 const PageHome = () => {
-  const userData = extractUser();
+  const { state } = useContext(UserContext);
 
   return (
     <Container>
-      <WelcomeText>Bem vindo(a) {userData?.name}</WelcomeText>
+      <WelcomeText>Bem vindo(a) {state.name}</WelcomeText>
     </Container>
   );
 };

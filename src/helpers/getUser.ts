@@ -31,8 +31,3 @@ export const extractUser = () => {
 
   return decoded;
 };
-
-export const getUserNotifications = async (): Promise<String[]> => {
-  const { data } = await apiAuth.get("/profile/notifications");
-  return data;
-};
