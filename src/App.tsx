@@ -1,27 +1,34 @@
 import "antd/dist/reset.css";
 
 import "./App.css";
-import { Avatar, Divider, Empty, Layout, Menu, Space, Typography } from "antd";
+import { Avatar, Divider, Layout, Menu, Space, Typography } from "antd";
 import {
   UserOutlined,
   HomeOutlined,
   UnorderedListOutlined,
   FileAddOutlined,
   NotificationOutlined,
+  LogoutOutlined,
+  ContainerOutlined,
 } from "@ant-design/icons";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import Investigationlist from "./pages/investigations/InvestigationList";
 
-function App() {
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useContext } from "react";
+import UserContext from "./context/user";
+
+function App({ children }: { children: React.ReactNode }) {
   const { Content, Sider } = Layout;
   const navigate = useNavigate();
+  const { state } = useContext(UserContext);
+
   return (
     <Layout hasSider>
       <Sider
         style={{
           overflow: "auto",
           height: "100vh",
-          width: "280px",
+          width: "20vw",
           position: "fixed",
           left: 0,
           top: 0,
@@ -33,29 +40,36 @@ function App() {
         <Space
           direction="vertical"
           size="middle"
-          style={{ marginLeft: "16px" }}
+          style={{ marginLeft: "16px", cursor: "pointer" }}
+          onClick={() => {
+            navigate("/profile");
+          }}
         >
           <Avatar
             size={64}
-            icon={<UserOutlined />}
+            src={
+              <img src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
+            }
             style={{ backgroundColor: "#D9D9D9" }}
-            onClick={() => {
-              navigate("profile");
-            }}
           />
-          <Space direction="vertical">
+          <div style={{ display: "flex", flexDirection: "column" }}>
             <Typography.Title level={5} style={{ color: "#f0f0f0" }}>
-              John Doe
+              {state.name || "Usuário"}
             </Typography.Title>
             <Typography.Text type="secondary" style={{ color: "#f0f0f0" }}>
-              john@doe.com
+              {state.email || ""}
             </Typography.Text>
-          </Space>
+          </div>
         </Space>
         <Divider />
         <Menu
           onClick={({ key }) => {
-            navigate(key);
+            if (key !== "logout") {
+              navigate("/" + key);
+            } else {
+              Cookies.remove("token");
+              navigate("/login");
+            }
           }}
           items={[
             { label: "Home", key: "home", icon: <HomeOutlined /> },
@@ -66,7 +80,7 @@ function App() {
             },
             {
               label: "Adicionar dados",
-              key: "investigations-add",
+              key: "investigations/add",
               icon: <FileAddOutlined />,
             },
             {
@@ -74,42 +88,29 @@ function App() {
               key: "notifications",
               icon: <NotificationOutlined />,
             },
+            {
+              label: "Meu perfil",
+              key: "profile",
+              icon: <UserOutlined />,
+              children: [
+                { label: "Perfil", key: "profile", icon: <UserOutlined /> },
+                {
+                  label: "Minhas investigações",
+                  key: "profile/investigations",
+                  icon: <ContainerOutlined />,
+                },
+                { label: "Sair", key: "logout", icon: <LogoutOutlined /> },
+              ],
+            },
           ]}
           style={{ backgroundColor: "#153D50", width: "100%" }}
           theme="dark"
         ></Menu>
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
-        <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
-          <Contenta></Contenta>
-        </Content>
+        <Content style={{ overflow: "initial" }}>{children}</Content>
       </Layout>
     </Layout>
-  );
-}
-
-function Contenta() {
-  return (
-    <div>
-      <Routes>
-        <Route path="/home" element={<div>Home</div>}></Route>
-        <Route
-          path="/investigations"
-          element={<Investigationlist/>}
-        ></Route>
-        <Route
-          path="/investigations-add"
-          element={<div>Adicionar investigações</div>}
-        ></Route>
-        <Route
-          path="/investigations/:id"
-          element={<div>Investigação</div>}
-        ></Route>
-        {/* <Route path="*" element={<Empty />}></Route> */}
-        <Route path="/notifications" element={<div>Notificações</div>}></Route>
-        <Route path="/profile" element={<div>Perfil</div>}></Route>
-      </Routes>
-    </div>
   );
 }
 
