@@ -15,13 +15,14 @@ import {
   Typography,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type { SelectProps } from "antd";
 import { RollbackOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { extractUser } from "../../../helpers/getUser";
 import { apiAuth } from "../../../helpers/api";
 import * as dayjs from "dayjs";
+import UserContext from "../../../context/user";
 
 interface DataType {
   id: number;
@@ -40,6 +41,8 @@ const InvestigationDetail = () => {
   const [checked, setChecked] = useState(true);
   const [files, setFiles] = useState<File[]>([]);
   const userData = extractUser();
+  const { state } = useContext(UserContext);
+
   const [switchState, setSwitchState] = useState(false);
 
   const [data, setData] = useState<DataType>();
@@ -107,7 +110,7 @@ const InvestigationDetail = () => {
           <Col span={12}>
             <Form.Item label="Autor" name="author">
               <Input
-                defaultValue={userData?.name} // pegar do nome do usuário autor da investigação
+                defaultValue={state.name} // pegar do nome do usuário autor da investigação
                 onChange={() => undefined}
                 disabled
               />

@@ -15,7 +15,7 @@ import {
   notification,
 } from "antd";
 import PageContainer from "../../../components/container/Container";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
   MinusCircleOutlined,
@@ -25,6 +25,7 @@ import {
 import { extractUser } from "../../../helpers/getUser";
 import { apiAuth } from "../../../helpers/api";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../../../context/user";
 
 const InvestigationsAdd = () => {
   const [form] = Form.useForm();
@@ -33,6 +34,7 @@ const InvestigationsAdd = () => {
   const userData = extractUser();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const navigate = useNavigate();
+  const { state } = useContext(UserContext);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -84,9 +86,9 @@ const InvestigationsAdd = () => {
       values.tags = selectedItems;
     }
     if (!values.author) {
-      values.author = userData?.name;
+      values.author = state.name;
     }
-    values.permitedUsers = [userData?.id];
+    values.permitedUsers = [state.id];
     apiAuth
       .post("/investigations", values)
       .then(() => {
@@ -145,7 +147,7 @@ const InvestigationsAdd = () => {
           <Col span={12}>
             <Form.Item label="Autor" name="author">
               <Input
-                defaultValue={userData?.name}
+                defaultValue={state.name}
                 onChange={() => undefined}
                 readOnly
               />

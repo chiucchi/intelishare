@@ -1,7 +1,7 @@
 import { Button, Empty, List, Space, Typography } from "antd";
 import PageContainer from "../../components/container/Container";
 import { NotificationOutlined } from "@ant-design/icons";
-import { getUserNotifications } from "../../helpers/getUser";
+import { getUserNotifications } from "../../utils/user";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

@@ -2,17 +2,24 @@ import { Button, Form, Input, Space, Typography, notification } from "antd";
 import Image from "../../assets/vector.svg";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-import { api } from "../../helpers/api";
+import { api, apiAuth } from "../../helpers/api";
+import { setUserDetails } from "../../utils/user";
+import { useContext } from "react";
+import UserContext from "../../context/user";
 
 function Login() {
   const navigate = useNavigate();
   const cookies = new Cookies();
+  const { setState, state } = useContext(UserContext);
 
   const onFinish = async (values: any) => {
     await api
       .post("/login", values)
-      .then((res) => {
+      .then(async (res) => {
         cookies.set("token", res.data.token, { path: "/" });
+        await apiAuth.get("/profile").then((res) => {
+          setState({ ...res.data });
+        });
         navigate("/home");
       })
       .catch((err) => {

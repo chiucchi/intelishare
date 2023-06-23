@@ -13,13 +13,14 @@ import {
 } from "@ant-design/icons";
 
 import { useNavigate } from "react-router-dom";
-import { extractUser } from "./helpers/getUser";
 import Cookies from "js-cookie";
+import { useContext } from "react";
+import UserContext from "./context/user";
 
 function App({ children }: { children: React.ReactNode }) {
   const { Content, Sider } = Layout;
   const navigate = useNavigate();
-  const userData = extractUser();
+  const { state } = useContext(UserContext);
 
   return (
     <Layout hasSider>
@@ -53,10 +54,10 @@ function App({ children }: { children: React.ReactNode }) {
           />
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Typography.Title level={5} style={{ color: "#f0f0f0" }}>
-              {userData?.name || "Usuário"}
+              {state.name || "Usuário"}
             </Typography.Title>
             <Typography.Text type="secondary" style={{ color: "#f0f0f0" }}>
-              {userData?.email || ""}
+              {state.email || ""}
             </Typography.Text>
           </div>
         </Space>

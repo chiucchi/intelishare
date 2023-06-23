@@ -5,25 +5,26 @@ import {
   DatePicker,
   DatePickerProps,
   Descriptions,
-  Divider,
   Form,
   Input,
   Popconfirm,
   Row,
   Select,
   Space,
-  Table,
   Typography,
 } from "antd";
 import PageContainer from "../../components/container/Container";
 import { QuestionCircleOutlined, UserOutlined } from "@ant-design/icons";
 import { ufData } from "../../mocks/uf-mock";
 import { extractUser } from "../../helpers/getUser";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import UserContext from "../../context/user";
+import * as dayjs from "dayjs";
 
 const Profile = () => {
   const [edit, setEdit] = useState(false);
   const user = extractUser();
+  const { state } = useContext(UserContext);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -59,9 +60,9 @@ const Profile = () => {
               <Col span={12}>
                 <Form.Item label="Nome" name="name">
                   {!edit ? (
-                    <>{user.name}</>
+                    <>{state.name}</>
                   ) : (
-                    <Input defaultValue={user.name} onChange={onChange} />
+                    <Input defaultValue={state.name} onChange={onChange} />
                   )}
                 </Form.Item>
               </Col>
@@ -69,10 +70,10 @@ const Profile = () => {
                 <Form.Item label="Email" name="email">
                   {!edit ? (
                     <Descriptions.Item label="Email">
-                      {user.email}
+                      {state.email}
                     </Descriptions.Item>
                   ) : (
-                    <Input defaultValue={user.email} onChange={onChange} />
+                    <Input defaultValue={state.email} onChange={onChange} />
                   )}
                 </Form.Item>
               </Col>
@@ -97,13 +98,14 @@ const Profile = () => {
                     onChange={onChangeDate}
                     format="DD/MM/YYYY"
                     disabled={!edit}
+                    value={dayjs(state.birthDate)}
                   />
                 </Form.Item>
               </Col>
               <Col span={6}>
                 <Form.Item label="UF" name="uf">
                   <Select
-                    defaultValue="MG"
+                    defaultValue={state.uf}
                     style={{ width: 120 }}
                     onChange={handleChange}
                     options={ufData}
