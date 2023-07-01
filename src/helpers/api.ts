@@ -2,10 +2,7 @@
 import axios from "axios";
 import Cookies from "universal-cookie";
 
-const url =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "https://intelishare-api-prod.up.railway.app/";
+const url = "https://intelishare-api-prod.up.railway.app";
 
 const cookies = new Cookies();
 
