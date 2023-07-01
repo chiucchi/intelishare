@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <UserProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Sign />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign" element={<Sign />} />
           <Route

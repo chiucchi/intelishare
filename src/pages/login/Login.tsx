@@ -17,9 +17,8 @@ function Login() {
       .post("/login", values)
       .then(async (res) => {
         cookies.set("token", res.data.token, { path: "/" });
-        await apiAuth.get("/profile").then((res) => {
-          setState({ ...res.data });
-        });
+        setState({ ...res.data.user });
+
         navigate("/home");
       })
       .catch((err) => {
